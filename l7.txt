@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool isSafe(vector<vector<int>>& graph, vector<int>& colors, int node, int color) {
+    // Check if any adjacent node has the same color
+    for (int adjacent : graph[node]) {
+        if (colors[adjacent] == color)
+            return false;
+    }
+    return true;
+}
+
+bool graphColoringUtil(vector<vector<int>>& graph, int numColors, vector<int>& colors, int node, int numNodes) {
+    // Base case: All nodes are colored
+    if (node == numNodes)
+        return true;
+
+    // Try different colors for the current node
+    for (int color = 1; color <= numColors; color++) {
+        if (isSafe(graph, colors, node, color)) {
+            // Assign the color to the current node
+            colors[node] = color;
+
+            // Recursively color the remaining nodes
+            if (graphColoringUtil(graph, numColors, colors, node + 1, numNodes))
+                return true;
+
+            // Backtrack: Remove the color if it doesn't lead to a solution
+            colors[node] = 0;
+        }
+    }
+
+    // No valid color found
+    return false;
+}
+
+void graphColoring(vector<vector<int>>& graph, int numColors) {
+    int numNodes = graph.size();
+
+    vector<int> colors(numNodes, 0);
+
+    if (graphColoringUtil(graph, numColors, colors, 0, numNodes)) {
+        cout << "Graph coloring possible using " << numColors << " colors:" << endl;
+        for (int i = 0; i < numNodes; i++) {
+            cout << "Node " << i << ": Color " << colors[i] << endl;
+        }
+    } else {
+        cout << "Graph coloring not possible using " << numColors << " colors." << endl;
+    }
+}
+
+int main() {
+    int numNodes, numEdges;
+    cout << "Enter the number of nodes and edges: ";
+    cin >> numNodes >> numEdges;
+
+    vector<vector<int>> graph(numNodes);
+
+    cout << "Enter the edges (u v):" << endl;
+    for (int i = 0; i < numEdges; ++i) {
+        int u, v;
+        cin >> u >> v;
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    int numColors;
+    cout << "Enter the number of colors: ";
+    cin >> numColors;
+
+    graphColoring(graph, numColors);
+
+    return 0;
+}

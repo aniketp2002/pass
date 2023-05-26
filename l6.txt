@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Edge {
+    int src, dest, weight;
+};
+
+struct Graph {
+    int V, E;
+    vector<Edge> edges;
+};
+
+struct Subset {
+    int parent;
+    int rank;
+};
+
+bool compareEdges(const Edge& edge1, const Edge& edge2) {
+    return edge1.weight < edge2.weight;
+}
+
+int find(Subset subsets[], int i) {
+    if (subsets[i].parent != i)
+        subsets[i].parent = find(subsets, subsets[i].parent);
+    return subsets[i].parent;
+}
+
+void Union(Subset subsets[], int x, int y) {
+    int xroot = find(subsets, x);
+    int yroot = find(subsets, y);
+
+    if (subsets[xroot].rank < subsets[yroot].rank)
+        subsets[xroot].parent = yroot;
+    else if (subsets[xroot].rank > subsets[yroot].rank)
+        subsets[yroot].parent = xroot;
+    else {
+        subsets[yroot].parent = xroot;
+        subsets[xroot].rank++;
+    }
+}
+
+void KruskalMST(Graph graph) {
+    int V = graph.V;
+    vector<Edge> result;
+    int e = 0;
+    int i = 0;
+
+    sort(graph.edges.begin(), graph.edges.end(), compareEdges);
+
+    Subset* subsets = new Subset[V];
+    for (int v = 0; v < V; ++v) {
+        subsets[v].parent = v;
+        subsets[v].rank = 0;
+    }
+
+    while (e < V - 1 && i < graph.E) {
+        Edge nextEdge = graph.edges[i++];
+
+        int x = find(subsets, nextEdge.src);
+        int y = find(subsets, nextEdge.dest);
+
+        if (x != y) {
+            result.push_back(nextEdge);
+            Union(subsets, x, y);
+            e++;
+        }
+    }
+
+    cout << "Minimum Spanning Tree (MST):" << endl;
+    for (auto edge : result) {
+        cout << edge.src << " -- " << edge.dest << " : " << edge.weight << endl;
+    }
+
+    delete[] subsets;
+}
+
+int main() {
+    Graph graph;
+    cout << "Enter the number of vertices and edges: ";
+    cin >> graph.V >> graph.E;
+
+    graph.edges.resize(graph.E);
+
+    cout << "Enter the edges (source, destination, weight):" << endl;
+    for (int i = 0; i < graph.E; ++i) {
+        cin >> graph.edges[i].src >> graph.edges[i].dest >> graph.edges[i].weight;
+    }
+
+    KruskalMST(graph);
+
+    return 0;
+}

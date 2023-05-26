@@ -1,0 +1,33 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+int main() {
+    std::map<std::string, std::string> responses;
+    responses["Hi"] = "Hello! How can I assist you with sim card data packs?";
+    responses["Recharge plans"] = "Here are some popular recharge plans:\nRs. 299 - Unlimited Calls + 1.5GB/day for 28 days\nRs. 719 - Unlimited Calls + 1.5GB/day for 84 days\nRs. 399 - Unlimited Calls + 2.5GB/day for 28 days\nRs. 499 - Unlimited Calls + 3GB/day for 28 days";
+    responses["Data plans"] = "These are some popular data plans:\nRs. 151 - 8GB for 30 days\nRs. 108 - 6GB for 15 days\nRs. 58 - 3GB for 28 days\nRs. 39 - 3GB for 7 days\nRs. 75 - 6GB for 7 days";
+    responses["Validity plans"] = "Here are some popular validity plans:\nRs. 99 - Rs. 99 talktime + 200MB for 28 days\nRs. 279 - Rs. 279 talktime + 500MB for 90 days\nRs. 107 - Rs. 107 talktime + 200MB for 30 days\nRs. 111 - Rs. 111 talktime + 200MB for 28 days";
+    responses["Yearly plans"] = "These are some popular yearly plans:\nRs. 3099 - Unlimited Calls + 2GB/day for 365 days\nRs. 2999 - Unlimited Calls + 850GB for 365 days\nRs. 2899 - Unlimited Calls + 1.5GB/day for 365 days\nRs. 1799 - Unlimited Calls + 24GB for 365 days";
+
+    std::cout << "ChatBot: Hello! How can I assist you with sim card data packs?\n";
+
+    while (true) {
+        std::string input;
+        std::cout << "You: ";
+        std::getline(std::cin, input);
+
+        if (input == "quit" || input == "Quit" || input == "exit") {
+            std::cout << "ChatBot: Thank you! Goodbye!\n";
+            break;
+        }
+
+        if (responses.find(input) != responses.end()) {
+            std::cout << "ChatBot: " << responses[input] << "\n";
+        } else {
+            std::cout << "ChatBot: I'm sorry, I don't have information about that. Can I assist you with something else?\n";
+        }
+    }
+
+    return 0;
+}

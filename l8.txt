@@ -1,0 +1,192 @@
+/* C/C++ program to solve N Queen Problem using
+backtracking */
+#define N 4
+#include <stdbool.h>
+#include <stdio.h>
+/* ld is an array where its indices indicate row-col+N-1
+(N-1) is for shifting the difference to store negative
+indices */
+int ld[30] = { 0 };
+/* rd is an array where its indices indicate row+col
+and used to check whether a queen can be placed on
+right diagonal or not*/
+int rd[30] = { 0 };
+/*column array where its indices indicates column and
+used to check whether a queen can be placed in that
+	row or not*/
+int cl[30] = { 0 };
+/* A utility function to print solution */
+void printSolution(int board[N][N])
+{
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)
+			printf(" %d ", board[i][j]);
+		printf("\n");
+	}
+}
+
+/* A recursive utility function to solve N
+Queen problem */
+bool solveNQUtil(int board[N][N], int col)
+{
+	/* base case: If all queens are placed
+	then return true */
+	if (col >= N)
+		return true;
+
+	/* Consider this column and try placing
+	this queen in all rows one by one */
+	for (int i = 0; i < N; i++) {
+		/* Check if the queen can be placed on
+		board[i][col] */
+		/* A check if a queen can be placed on
+		board[row][col].We just need to check
+		ld[row-col+n-1] and rd[row+coln] where
+		ld and rd are for left and right
+		diagonal respectively*/
+		if ((ld[i - col + N - 1] != 1 &&
+				rd[i + col] != 1) && cl[i] != 1) {
+			/* Place this queen in board[i][col] */
+			board[i][col] = 1;
+			ld[i - col + N - 1] =
+						rd[i + col] = cl[i] = 1;
+
+			/* recur to place rest of the queens */
+			if (solveNQUtil(board, col + 1))
+				return true;
+
+			/* If placing queen in board[i][col]
+			doesn't lead to a solution, then
+			remove queen from board[i][col] */
+			board[i][col] = 0; // BACKTRACK
+			ld[i - col + N - 1] =
+						rd[i + col] = cl[i] = 0;
+		}
+	}
+
+	/* If the queen cannot be placed in any row in
+		this column col then return false */
+	return false;
+}
+/* This function solves the N Queen problem using
+Backtracking. It mainly uses solveNQUtil() to
+solve the problem. It returns false if queens
+cannot be placed, otherwise, return true and
+prints placement of queens in the form of 1s.
+Please note that there may be more than one
+solutions, this function prints one of the
+feasible solutions.*/
+bool solveNQ()
+{
+	int board[N][N] = { { 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 } };
+
+	if (solveNQUtil(board, 0) == false) {
+		printf("Solution does not exist");
+		return false;
+	}
+
+	printSolution(board);
+	return true;
+}
+
+// driver program to test above function
+int main()
+{
+	solveNQ();
+	return 0;
+}
+
+
+
+
+
+
+-------------------------------------------------------------------
+
+
+#include<bits/stdc++.h>
+
+using namespace std;
+bool checkSafety(vector < vector < int >> & b, int r, int n, int c) {
+  // traversing the row where the current queen is to be placed tocheck for conflicting queen
+  
+  for (int i = 0; i < c; i++) {
+    if (b[r][i] == 1) {
+      return false;
+    }
+  }
+  int r1 = r, c1 = c;
+  // traversing top left diagonal
+  while (r1 != -1 && c1 != -1) {
+    if (b[r1][c1] == 1) {
+      return false;
+    }
+    --r1;
+    --c1;
+  }
+  // traversing bottom left diagonal
+  r1 = r;
+  c1 = c;
+  while (r1 < n && c1 != -1) {
+    if (b[r1][c1] == 1) {
+      return false;
+    }
+    ++r1;
+    --c1;
+  }
+  return true; // no conflicting queen present
+}
+bool NQueens(vector < vector < int >> & b, int c, int n) {
+  if (c == n) {
+    return true;
+  }
+  for (int i = 0; i < n; i++) {
+    if (checkSafety(b, i, n, c)) {
+      b[i][c] = 1;
+      if (NQueens(b, c + 1, n)) {
+        return true;
+      }
+      b[i][c] = 0;
+    }
+  }
+  return false;
+}
+int main() {
+  int n;
+  while (true) {
+    cout << "\nEnter number of queens: ";
+    cin >> n;
+    if (n == -1) {
+      cout << "\nThank You.... ";
+      return 1;
+    }
+    vector < vector < int >> b;
+    for (int i = 0; i < n; i++) {
+      vector < int > x;
+      for (int j = 0; j < n; j++) {
+        x.push_back(0);
+      }
+      b.push_back(x);
+    }
+    if (NQueens(b, 0, n)) {
+      cout << "\n";
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          if (b[i][j] == 1) {
+            cout << "Q ";
+          } else {
+            cout << ". ";
+          }
+        }
+        cout << "\n";
+      }
+    } else {
+      cout << "\nSolution not possible\n";
+    }
+    cout << "\nEnter -1 to exit...\n";
+  }
+  return 0;
+}
