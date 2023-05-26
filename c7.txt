@@ -1,0 +1,42 @@
+public class Calculator {
+    
+    public static Decimal add(Decimal operand1, Decimal operand2) {
+        return operand1 + operand2;
+    }
+    
+    public static Decimal subtract(Decimal operand1, Decimal operand2) {
+        return operand1 - operand2;
+    }
+    
+    public static Decimal multiply(Decimal operand1, Decimal operand2) {
+        return operand1 * operand2;
+    }
+    
+    public static Decimal divide(Decimal operand1, Decimal operand2) {
+        if (operand2 == 0) {
+            throw new DivideByZeroException('Division by zero is not allowed.');
+        }
+        return operand1 / operand2;
+    }
+    
+}
+
+
+
+
+
+
+Decimal num1 = 10;
+Decimal num2 = 5;
+
+Decimal sum = Calculator.add(num1, num2);
+System.debug('Sum: ' + sum);
+
+Decimal difference = Calculator.subtract(num1, num2);
+System.debug('Difference: ' + difference);
+
+Decimal product = Calculator.multiply(num1, num2);
+System.debug('Product: ' + product);
+
+Decimal quotient = Calculator.divide(num1, num2);
+System.debug('Quotient: ' + quotient);

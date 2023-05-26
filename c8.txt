@@ -1,0 +1,13 @@
+public class Newclass {
+	public Decimal myValue;
+    public String myString = '';
+    public static Decimal getCalculatedValue(Decimal f){
+        Decimal myValue = (f - 32) * 5/9;
+        System.debug('the result is '+ myValue);
+        return myValue;
+    }
+}
+
+
+
+Newclass.getCalculatedValue(108);
